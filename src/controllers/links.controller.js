@@ -3,7 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { Link } from "../models/links.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import validUrl from "../utils/validUrl.js";
+// import validUrl from "../utils/validUrl.js";
 
 
 
@@ -12,9 +12,9 @@ const link=asyncHandler(async(req, res)=>{
   if(!originalUrl){
     throw new ApiError(401,"link is required");
   }
-  if(!validUrl(originalUrl)){
-    throw new ApiError(401,"link is not valid");
-  }
+  // if(!validUrl(originalUrl)){
+  //   throw new ApiError(401,"link is not valid");
+  // }
   const shortUrl=nanoid(8);
   const link=await Link.create({
     originalUrl,
