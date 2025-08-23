@@ -3,15 +3,6 @@ import cors from "cors"
 import cookieParser from "cookie-parser"
 import errorMiddleware from './middlewares/error.middleware.js'
 const app=express()
-// app.use(cors(
-//     {
-//         origin:process.env.CORS_ORIGIN,
-//         credentials:true
-//     }
-
-// ))
-
-
 
 const allowedOrigins = (process.env.CORS_ORIGIN || '').split(',');
 app.use(cors({
