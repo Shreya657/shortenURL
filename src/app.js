@@ -1,7 +1,7 @@
 import express from "express"
 import cors from "cors"
 import cookieParser from "cookie-parser"
-// import errorMiddleware from './middlewares/error.middleware.js'
+import errorMiddleware from './middlewares/error.middleware.js'
 const app=express()
 // app.use(cors(
 //     {
@@ -35,6 +35,7 @@ app.use(cookieParser())
 import linkRouter from './routes/links.route.js'
 
 app.use("/api/v1/links",linkRouter)
+app.use(errorMiddleware)
 
 
 
