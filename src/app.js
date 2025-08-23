@@ -25,7 +25,7 @@ app.use(cookieParser())
 
 import linkRouter from './routes/links.route.js'
 
-app.use("/api/v1/links",linkRouter)
+app.use("/",linkRouter)
 app.use(errorMiddleware)
 
 
