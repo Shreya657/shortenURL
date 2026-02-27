@@ -4,7 +4,27 @@ import cookieParser from "cookie-parser"
 import errorMiddleware from './middlewares/error.middleware.js'
 const app=express()
 
-const allowedOrigins = (process.env.CORS_ORIGIN || '').split(',');
+// const allowedOrigins = (process.env.CORS_ORIGIN || '')
+//   .split(',')
+//   .map(o => o.trim())      // removes invisible spaces/newlines
+//   .filter(o => o !== "");
+// app.use(cors({
+//   origin: function (origin, callback) {
+//     if (origin === "http://localhost:5173" || !origin) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error('Not allowed by CORS'));
+//     }
+//   },
+//   credentials: true
+// }));
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  process.env.CORS_ORIGIN 
+].filter(Boolean); 
+
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {

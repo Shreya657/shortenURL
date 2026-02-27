@@ -7,30 +7,42 @@ import validUrl from "../utils/validUrl.js";
 
 
 
-const link=asyncHandler(async(req, res)=>{
-  const {originalUrl} = req.body;
-  if(!originalUrl){
-    throw new ApiError(401,"link is required");
+const link = asyncHandler(async (req, res) => {
+  let { originalUrl } = req.body; // use 'let' so we can modify it
+
+  if (!originalUrl) {
+    throw new ApiError(401, "link is required");
   }
-  if(!validUrl(originalUrl)){
-    throw new ApiError(400,"link is not valid");
+
+  if (!originalUrl.startsWith('http')) {
+    originalUrl = `https://${originalUrl}`;
   }
-  const shortUrl=nanoid(8);
-  const link=await Link.create({
+
+  if (!validUrl(originalUrl)) {
+    throw new ApiError(400, "link is not valid");
+  }
+
+  const shortCode = nanoid(8);
+  
+  const createdLink = await Link.create({
     originalUrl,
-    shortUrl,
-    expiredAt: Date.now() + 30 * 24 * 60 * 60 * 1000 // 30 days expiry
-  })
+    shortUrl: shortCode,
+    expiredAt: Date.now() + 30 * 24 * 60 * 60 * 1000 // 30 days
+  });
+
+  const baseUrl = process.env.DOMAIN_URL || `${req.protocol}://${req.get("host")}`;
+  
+  //  will produce: https://your-app.onrender.com/j-yKCXWF
+  const fullShortUrl = `${baseUrl}/${createdLink.shortUrl}`;
 
   return res
-  .status(200)
-  .json(new ApiResponse(200,{
-            shortUrl: `${req.protocol}://${req.get("host")}/${link.shortUrl}`, // full URL
-        originalUrl: link.originalUrl,
-        expiredAt: link.expiredAt
-  },"link shortened successfully"))
-
-})
+    .status(200)
+    .json(new ApiResponse(200, {
+        shortUrl: fullShortUrl, 
+        originalUrl: createdLink.originalUrl,
+        expiredAt: createdLink.expiredAt
+    }, "link shortened successfully"));
+});
 const redirect=asyncHandler(async(req,res)=>{
     const {shortUrl}=req.params;
     const link=await Link.findOne({shortUrl});
