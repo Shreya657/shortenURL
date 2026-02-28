@@ -47,9 +47,13 @@ const redirect=asyncHandler(async(req,res)=>{
     const {shortUrl}=req.params;
     const link=await Link.findOne({shortUrl});
     if(!link){
-        throw new ApiError(404,"link not found");
+        throw new ApiError(404,"link not found or has expired");
     }
-    return res.redirect(link.originalUrl);
+    let targetUrl = link.originalUrl;
+    if (!targetUrl.startsWith('http://') && !targetUrl.startsWith('https://')) {
+        targetUrl = `https://${targetUrl}`;
+    }
+    return res.redirect(targetUrl);
 })
 
 export { link, redirect }

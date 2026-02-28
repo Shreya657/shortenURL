@@ -25,6 +25,8 @@ const allowedOrigins = [
   process.env.CORS_ORIGIN 
 ].filter(Boolean); 
 
+// .filter(Boolean): if process.env.CORS_ORIGIN is undefined (like when working locally), this removes the null/undefined from the array.
+
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
